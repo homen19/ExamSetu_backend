@@ -39,3 +39,12 @@ temp/
 tmp/
 .DS_Store
 Thumbs.db
+
+### Local environment & secrets ###
+application-local.yml
+application-local.yaml
+*-local.yml
+*-local.yaml
+.env
+.env.local
+

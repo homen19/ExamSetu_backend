@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: "optional:classpath:application-local.yml"
   datasource:
     url: jdbc:mysql://localhost:3306/mocktestapp?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
@@ -19,8 +21,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 734921297501-b9avh3q94pabgigek9bd9ak5i54ol30g.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
             scope:
               - email
               - profile
