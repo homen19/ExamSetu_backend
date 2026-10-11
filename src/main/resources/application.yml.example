@@ -1,0 +1,43 @@
+# Sample application.yml for production / GitHub
+# Copy this file to application.yml or supply environment variables
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/mocktestapp?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+server:
+  port: ${PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:MockTestApp_SuperSecret_JWT_Key_2024_Replace_This_With_A_Long_Random_String_At_Least_256_Bits}
+    expiration-ms: 86400000   # 24 hours
+    refresh-expiration-ms: 604800000  # 7 days
+
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

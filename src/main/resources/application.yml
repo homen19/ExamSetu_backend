@@ -1,0 +1,59 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mocktestapp?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 734921297501-b9avh3q94pabgigek9bd9ak5i54ol30g.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: "MockTestApp_SuperSecret_JWT_Key_2024_Replace_This_With_A_Long_Random_String_At_Least_256_Bits"
+    expiration-ms: 86400000   # 24 hours
+    refresh-expiration-ms: 604800000  # 7 days
+
+  frontend-url: http://localhost:5173
+  allowed-origins: http://localhost:5173,http://localhost:3000
+
+# Swagger / OpenAPI configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+    tryItOutEnabled: true
+  info:
+    title: MockTestApp API
+    description: "REST API for MockTestApp — Quiz/Mock Test Platform. Use Bearer JWT token for authentication."
+    version: "1.0.0"
+
+logging:
+  level:
+    com.mocktestapp: DEBUG
+    org.springframework.security: INFO
