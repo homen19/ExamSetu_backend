@@ -2,10 +2,13 @@ spring:
   config:
     import: "optional:classpath:application-local.yml"
   datasource:
-    url: jdbc:mysql://localhost:3306/mocktestapp?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+    url: ${DB_URL:jdbc:mysql://localhost:3306/mocktestapp?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
 
   jpa:
     hibernate:
@@ -21,24 +24,35 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
-            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 app:
   jwt:
-    secret: "MockTestApp_SuperSecret_JWT_Key_2024_Replace_This_With_A_Long_Random_String_At_Least_256_Bits"
-    expiration-ms: 86400000   # 24 hours
-    refresh-expiration-ms: 604800000  # 7 days
+    # JWT_SECRET is REQUIRED — app will fail to start if not set in production
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
 
-  frontend-url: http://localhost:5173
-  allowed-origins: http://localhost:5173,http://localhost:3000
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
+
+# Actuator — expose only health endpoint for Render health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
 
 # Swagger / OpenAPI configuration
 springdoc:
@@ -57,5 +71,5 @@ springdoc:
 
 logging:
   level:
-    com.mocktestapp: DEBUG
+    com.mocktestapp: ${LOG_LEVEL:INFO}
     org.springframework.security: INFO

@@ -1,0 +1,11 @@
+target/
+.git/
+.idea/
+*.iws
+*.iml
+*.ipr
+.gitignore
+*.log
+logs/
+application-local.yml
+.env

@@ -35,12 +35,12 @@ public class AttemptService {
         }
 
         // Check assignment
-        TestAssignment assignment = assignmentRepository.findByTestIdAndUserId(testId, user.getId())
-                .orElseThrow(() -> new RuntimeException("You are not assigned to this test"));
-
-        if (!assignment.getIsAllowed()) {
-            throw new RuntimeException("Your access to this test has been restricted");
-        }
+        assignmentRepository.findByTestIdAndUserId(testId, user.getId())
+                .ifPresent(assignment -> {
+                    if (!assignment.getIsAllowed()) {
+                        throw new RuntimeException("Your access to this test has been restricted");
+                    }
+                });
 
         // Check attempt count
         long attemptsUsed = attemptRepository.countByUserIdAndTestId(user.getId(), testId);

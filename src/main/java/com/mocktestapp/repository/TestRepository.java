@@ -15,7 +15,7 @@ public interface TestRepository extends JpaRepository<Test, Long> {
 
     List<Test> findByStatus(Test.TestStatus status);
 
-    @Query("SELECT DISTINCT t FROM Test t JOIN t.assignments a WHERE a.user.id = :userId AND a.isAllowed = true AND t.status = 'ACTIVE'")
+    @Query("SELECT DISTINCT t FROM Test t LEFT JOIN t.assignments a WHERE (a.user.id = :userId AND a.isAllowed = true) OR (t.assignments IS EMPTY) OR (t.status = 'ACTIVE')")
     List<Test> findAssignedActiveTestsForUser(@Param("userId") Long userId);
 
     @Query("SELECT COUNT(t) FROM Test t WHERE t.createdBy.id = :adminId")
