@@ -1,0 +1,49 @@
+# render.yaml — Render Infrastructure as Code
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This file lives in the repo root (your backend/ folder pushed to GitHub).
+# Usage: Render dashboard → New → Blueprint → connect repo → done.
+
+services:
+  - type: web
+    name: mocktestapp-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free                     # Change to 'starter' or higher for production
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    branch: main
+
+    envVars:
+      # ── Database ──────────────────────────────────────────────────────────
+      - key: DB_URL
+        sync: false                # Set manually in Render dashboard
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+      # ── Google OAuth ──────────────────────────────────────────────────────
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+
+      # ── JWT ───────────────────────────────────────────────────────────────
+      - key: JWT_SECRET
+        generateValue: true        # Render auto-generates a secure random value
+
+      # ── CORS / Frontend ───────────────────────────────────────────────────
+      - key: FRONTEND_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+      # ── Optional tunables ─────────────────────────────────────────────────
+      - key: LOG_LEVEL
+        value: INFO
+      - key: JWT_EXPIRATION_MS
+        value: "86400000"
+      - key: JWT_REFRESH_EXPIRATION_MS
+        value: "604800000"
